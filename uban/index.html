@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>邀请你下载优办</title>
+	<meta name="viewport" content="initial-scale=0.5,maximum-scale=0.5, minimum-scale=0.5">
+	<link rel="stylesheet" type="text/css" href="css/css.css">
+</head>
+<body>
+	<div id="container">
+	<h1 id="corp">{corp}</h1>
+	<div class="content">
+		<div class="userInfo"><img id="avatar"/>
+			<div id="dv-avatar" class="dv-avatar"></div>
+			<div id="user1"></div>
+		</div>
+		<div class="desc"><span class="gray">邀请您下载</span><i class="logo"></i><span>优办</span></div>
+		<div class="dont">Hi，我是你的同事，我们正在用优办，快下载吧！<br/>以后我们就可以在优办上沟通工作了!</div>
+	</div>
+	<div id="operate">
+	<a id="download" href="#">立即下载</a>
+	</div>
+	<p class="info">微信用户若不能安装，请点击微信右上角“...”<br>图标，选择<span id="openWidthBrowser">“在Safari中打开”</span>。</p>
+	</div>
+	<script>
+	var cw = Math.min( document.documentElement.clientWidth ,750);
+	document.documentElement.style.fontSize = cw / 7.5 + 'px';
+		var uA = navigator.userAgent || navigator.appVersion,
+			isIos = /(iPhone|iPod|iPad);/i.test(uA),
+			isWX =  /micromessenger/i.test(uA);
+
+		// remindType 参数 不等于1,2的才会尝试打开APP，不带参数的点击按钮下载；
+		var 
+			getDownloadHref = function () {
+				return isIos 
+						? 'https://itunes.apple.com/cn/app/id1014923769?mt=8' 
+						: 'http://download.cdn.uban360.com/release/uban_latest.apk';
+			};
+		
+		if( !isWX ){
+			document.getElementsByTagName('p')[0].style.display = 'none';
+			document.getElementById('operate').style.bottom = '6em';
+		} else {
+			!isIos && (document.getElementById('openWidthBrowser').innerHTML = '“在浏览器中打开”');
+		}
+
+		document.getElementById('download').setAttribute('href', getDownloadHref());
+
+		function getQuery(name, type, win) {
+			var reg = new RegExp("(^|&|#)" + name + "=([^&]*)(&|$|#)", "i");
+			win = win || window;
+			var Url = win.location.href;
+			var u, g, StrBack = '';
+			if (type == "#") {
+				u = Url.split("#");
+			} else {
+				u = Url.split("?");
+			}
+			if (u.length == 1) {
+				g = '';
+			} else {
+				g = u[1];
+			}
+			if (g != '') {
+				gg = g.split(/&|#/);
+				var MaxI = gg.length;
+				str = arguments[0] + "=";
+				for (i = 0; i < MaxI; i++) {
+					if (gg[i].indexOf(str) == 0) {
+						StrBack = gg[i].replace(str, "");
+						break;
+					}
+				}
+			}
+			return decodeURI(StrBack);
+		}
+		document.getElementById('corp').innerHTML=getQuery('corp');
+		document.getElementById('user1').innerHTML=getQuery('user');
+		document.getElementById('avatar').setAttribute('src',"http://n1.store.uban360.com:7188/sfs/avatar?uid="+ getQuery('uid') +"&isThumb=1")
+		document.getElementById('avatar').addEventListener('error',noAvatar.bind(this,this));
+		function noAvatar(obj) {
+		    var word = getQuery('user')
+		      , avatarColors = ['#f17474','#7ac47a','#efbc6b','#75a4d7','#45b2e3']
+		      , color = avatarColors[parseInt(getQuery('uid')) % 5]
+		      ;
+		      document.getElementById('dv-avatar').innerHTML = word;
+		      document.getElementById('dv-avatar').style.backgroundColor=color;
+		      document.getElementById('dv-avatar').style.display="inline-block"
+		      document.getElementById('avatar').style.display="none"
+		  }
+	</script>
+</body>
+</html>
